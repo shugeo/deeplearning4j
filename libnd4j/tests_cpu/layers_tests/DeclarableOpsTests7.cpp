@@ -374,12 +374,13 @@ TEST_F(DeclarableOpsTests7, TestMatrixDiag_2) {
 TEST_F(DeclarableOpsTests7, TestRandomCrop_1) {
     auto x = NDArrayFactory::create<double>('c', {2, 2, 4}, {1.8, 2.5,  4.,  9., 2.1, 2.4,  3.,  9.,2.1, 2.1, 0.7, 0.1,3., 4.2, 2.2, 1. });
     auto shape = NDArrayFactory::create<int>({1, 2, 3});
+    auto exp = NDArrayFactory::create<double>('c', {1,2,3}, {1.8, 2.5, 4., 2.1, 2.4, 3.});
     nd4j::ops::random_crop op;
 
-    auto result = op.execute({&x, &shape}, {}, {});
+    auto result = op.execute({&x, &shape}, {}, {119});
     ASSERT_EQ(result->status(), Status::OK());
-    //result->at(0)->printIndexedBuffer("Output");
-//    ASSERT_TRUE(z.equalsTo(result->at(0)));
+//    result->at(0)->printIndexedBuffer("random crop Output 1");
+//    ASSERT_TRUE(exp.equalsTo(result->at(0)));
 
     delete result;
 }
@@ -388,12 +389,28 @@ TEST_F(DeclarableOpsTests7, TestRandomCrop_1) {
 TEST_F(DeclarableOpsTests7, TestRandomCrop_2) {
     auto x = NDArrayFactory::create<double>('c', {2, 2, 4}, {1.8, 2.5,  4.,  9., 2.1, 2.4,  3.,  9.,2.1, 2.1, 0.7, 0.1,3., 4.2, 2.2, 1. });
     auto shape = NDArrayFactory::create<Nd4jLong>({2, 2, 2});
+    auto exp = NDArrayFactory::create<double>('c', {2,2,2}, {2.5, 4.0, 2.4, 3.0,  2.1, 0.7, 4.2, 2.2});
     nd4j::ops::random_crop op;
 
-    auto result = op.execute({&x, &shape}, {}, {});
+    auto result = op.execute({&x, &shape}, {}, {119});
     ASSERT_EQ(result->status(), Status::OK());
-    //result->at(0)->printIndexedBuffer("Output");
-//    ASSERT_TRUE(z.equalsTo(result->at(0)));
+//    result->at(0)->printIndexedBuffer("random crop Output 2");
+//    ASSERT_TRUE(exp.equalsTo(result->at(0)));
+
+    delete result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+TEST_F(DeclarableOpsTests7, TestRandomCrop_3) {
+    auto x = NDArrayFactory::create<double>('c', {2, 3, 4, 5});
+    auto shape = NDArrayFactory::create<Nd4jLong>({1, 2, 3, 4});
+    auto exp = NDArrayFactory::create<double>('c', {1,2,3,4}, {22,23,24,25,27,28,29,30, 32,33,34,35, 42,43,44,45, 47,48,49,50, 52, 53,54,55});
+    nd4j::ops::random_crop op;
+    x.linspace(1.);
+    auto result = op.execute({&x, &shape}, {}, {119});
+    ASSERT_EQ(result->status(), Status::OK());
+//    result->at(0)->printIndexedBuffer("random crop Output 3");
+//    ASSERT_TRUE(exp.equalsTo(result->at(0)));
 
     delete result;
 }
